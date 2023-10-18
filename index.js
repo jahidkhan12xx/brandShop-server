@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 3000;
@@ -31,26 +31,79 @@ async function run() {
     await client.connect();
 
     const database = client.db("AddProducts").collection("Products");
+    const database2 = client.db("AddToCart").collection("Device");
 
     app.get("/products/:id", async (req, res) => {
       const id = req.params.id;
+      
+      console.log(id);
       const query = {
-        
-        brand_name:  (id),
+        "_id" : new ObjectId(id)
       };
       const result = await database.findOne(query);
       console.log(result);
       res.send(result);
     });
+    
 
     app.get("/products", async (req, res) => {
       const result = await database.find().toArray();
       res.send(result);
     });
+    
 
     app.post("/products", async (req, res) => {
       const product = req.body;
       const result = await database.insertOne(product);
+      console.log(result);
+      res.send(result);
+    });
+    
+    app.put("/products/:id", async (req, res) => {
+      const id = req.params.id;
+      const data = req.body;
+      console.log("id", id, data);
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedUSer = {
+        $set: {
+          brand_name: data.brand_name,
+          product_name: data.product_name,
+          product_img: data.product_img,
+          product_price: data.product_price,
+          product_rating: data.product_rating,
+          product_type: data.product_type,
+          product_des: data.product_des,
+        },
+      };
+      const result = await database.updateOne(
+        filter,
+        updatedUSer,
+        options
+      );
+      res.send(result);
+    });
+
+
+    app.get("/cart", async (req, res) => {
+      const result = await database2.find().toArray();
+      res.send(result);
+    });
+
+    app.post("/cart", async (req, res) => {
+      const product = req.body;
+      const result = await database2.insertOne(product);
+      console.log(result);
+      res.send(result);
+    });
+
+    app.delete("/cart/:id", async (req, res) => {
+      const id = req.params.id;
+      console.log("delete", id);
+      const query = {
+        _id: new ObjectId(id),
+      };
+      const result = await database2.deleteOne(query);
       console.log(result);
       res.send(result);
     });
