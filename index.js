@@ -93,18 +93,18 @@ async function run() {
     app.post("/cart", async (req, res) => {
       const product = req.body;
       const result = await database2.insertOne(product);
-      console.log(result);
+      
       res.send(result);
     });
 
     app.delete("/cart/:id", async (req, res) => {
       const id = req.params.id;
-      console.log("delete", id);
+      
       const query = {
         _id: new ObjectId(id),
       };
       const result = await database2.deleteOne(query);
-      console.log(result);
+      
       res.send(result);
     });
 
