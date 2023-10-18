@@ -36,12 +36,12 @@ async function run() {
     app.get("/products/:id", async (req, res) => {
       const id = req.params.id;
       
-      console.log(id);
+      
       const query = {
         "_id" : new ObjectId(id)
       };
       const result = await database.findOne(query);
-      console.log(result);
+      
       res.send(result);
     });
     
@@ -55,7 +55,6 @@ async function run() {
     app.post("/products", async (req, res) => {
       const product = req.body;
       const result = await database.insertOne(product);
-      console.log(result);
       res.send(result);
     });
     
