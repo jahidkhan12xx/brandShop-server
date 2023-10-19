@@ -1,8 +1,10 @@
 const express = require('express');
-const cors = require('cors');
-const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
-require('dotenv').config();
 const app = express();
+const cors = require('cors');
+require('dotenv').config();
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+
+
 const port = process.env.PORT || 3000;
 
 // MiddleWare
@@ -28,7 +30,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     
-    await client.connect();
+    
 
     const database = client.db("AddProducts").collection("Products");
     const database2 = client.db("AddToCart").collection("Device");
@@ -111,7 +113,7 @@ async function run() {
 
 
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+    
     console.log("Pinged your deployment sir. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
